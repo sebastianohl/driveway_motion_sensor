@@ -1,0 +1,9 @@
+menu "Driveway Motion Sensor Configuration"
+
+  config WIFI_SSID
+    string "WIFI SSID"
+  config WIFI_PASSWORD
+    string "WIFI Password"
+
+
+endmenu
