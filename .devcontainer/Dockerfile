@@ -11,8 +11,9 @@ RUN mkdir -p /esp
 RUN cd /esp && git clone -b v4.3.1 --recursive https://github.com/espressif/esp-idf.git 
 RUN su - vscode -c "cd /esp/esp-idf && ./install.sh esp32s2"
 RUN echo ". /esp/esp-idf/export.sh" >> /home/vscode/.profile
+RUN cd /esp/esp-idf/components && git clone https://github.com/espressif/esp32-camera.git
 
-RUN export DEBIAN_FRONTEND=noninteractive && apt-get install -y libpython2.7 usbutils
+RUN export DEBIAN_FRONTEND=noninteractive && apt-get install -y libpython2.7 usbutils clang-format-7
 
 
 

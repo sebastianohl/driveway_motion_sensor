@@ -15,5 +15,6 @@
         "mcpwm.h": "c",
         "soc_caps.h": "c",
         "modelcar.h": "c"
-    }
+    },
+    "clang-format.executable": "clang-format-7"
 }
