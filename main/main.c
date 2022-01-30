@@ -14,6 +14,8 @@
 
 #include "esp_camera.h"
 
+#include "httpd.h"
+
 #define TAG "driveway_motion_main"
 
 #define BOARD_ESP32CAM_AITHINKER
@@ -61,17 +63,26 @@ static camera_config_t camera_config = {
 
     // XCLK 20MHz or 10MHz for OV2640 double FPS (Experimental)
     .xclk_freq_hz = 20000000,
+    //.xclk_freq_hz = 16500000,
     .ledc_timer = LEDC_TIMER_0,
     .ledc_channel = LEDC_CHANNEL_0,
 
+    //.pixel_format = PIXFORMAT_JPEG, // YUV422,GRAYSCALE,RGB565,JPEG
     .pixel_format = PIXFORMAT_RGB565, // YUV422,GRAYSCALE,RGB565,JPEG
-    .frame_size =
-        FRAMESIZE_QVGA, // QQVGA-UXGA Do not use sizes above QVGA when not JPEG
 
-    .jpeg_quality = 12, // 0-63 lower number means higher quality
+    //.frame_size = FRAMESIZE_UXGA, // 1600x1200
+    .frame_size = FRAMESIZE_VGA, // 800x600
+    //.frame_size =
+    //    FRAMESIZE_QVGA, // QQVGA-UXGA Do not use sizes above QVGA when not
+    //    JPEG
+
+    .jpeg_quality = 5, // 0-63 lower number means higher quality
     .fb_count =
-        1, // if more than one, i2s runs in continuous mode. Use only with JPEG
-    .grab_mode = CAMERA_GRAB_WHEN_EMPTY,
+        1, // if more than one, runs in continuous mode. Use only with JPEG
+
+    //.fb_location = CAMERA_FB_IN_PSRAM,
+    //.grab_mode = CAMERA_GRAB_WHEN_EMPTY,
+    .grab_mode = CAMERA_GRAB_LATEST,
 };
 
 int wifi_retry_count = 0;
@@ -167,17 +178,19 @@ void app_main(void)
 
     ESP_ERROR_CHECK(esp_camera_init(&camera_config));
 
+    driveway_httpd_start_webserver();
+
     ESP_LOGI(TAG, "Minimum free heap size: %d bytes",
              esp_get_minimum_free_heap_size());
 
     while (1)
     {
         ESP_LOGI(TAG, "cycle...");
-        camera_fb_t *pic = esp_camera_fb_get();
+        // camera_fb_t *pic = esp_camera_fb_get();
 
         // use pic->buf to access the image
-        ESP_LOGI(TAG, "Picture taken! Its size was: %zu bytes", pic->len);
-        esp_camera_fb_return(pic);
+        // ESP_LOGI(TAG, "Picture taken! Its size was: %zu bytes", pic->len);
+        // esp_camera_fb_return(pic);
         vTaskDelay(5000 / portTICK_PERIOD_MS);
     }
 }

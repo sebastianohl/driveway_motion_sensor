@@ -3,6 +3,6 @@
 cmake_minimum_required(VERSION 3.5)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-set(SUPPORTED_TARGETS esp32s)
+#set(SUPPORTED_TARGETS esp32s)
 #set(IDF_TARGET esp32s)
 project(driveway_motion)
